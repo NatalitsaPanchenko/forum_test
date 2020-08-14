@@ -68,7 +68,7 @@ namespace forum_test.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+            /* if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -88,7 +88,29 @@ namespace forum_test.Controllers
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
+            }*/
+
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindAsync(model.Email, model.Password);
+                if (user != null)
+                {
+                    if (user.EmailConfirmed == true)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Your email isn`t confirmed!");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Eather login or password is wrong!");
+                }
             }
+            return View(model);
         }
 
         //
@@ -155,15 +177,14 @@ namespace forum_test.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, 
+                        code = code },
+                        protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Email validation",
+                        "To finish registration follow <a href=\"" + callbackUrl + "\">this link</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return View("DisplayEmail");
                 }
                 AddErrors(result);
             }

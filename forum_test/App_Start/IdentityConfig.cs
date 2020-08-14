@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using forum_test.Models;
+using System.Net.Mail;
 
 namespace forum_test
 {
@@ -18,8 +19,32 @@ namespace forum_test
     {
         public Task SendAsync(IdentityMessage message)
         {
+            //#region Email validation
+
+            var from = "pn.dev.ukr@gmail.com";
+
+            var password = "admin!Pan1";
+
+            // personal data
+
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential(from, password);
+            client.EnableSsl = true;
+
+            var mail = new MailMessage(from, message.Destination);
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+            mail.IsBodyHtml = true;
+
+            return client.SendMailAsync(mail);
+
+            //#endregion
+
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            // return Task.FromResult(0);
         }
     }
 
@@ -40,7 +65,8 @@ namespace forum_test
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, 
+                                                    IOwinContext context) 
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
