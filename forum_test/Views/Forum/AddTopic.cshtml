@@ -3,10 +3,12 @@
     ViewBag.Title = "AddTopic";
 }
 
-<h2>AddTopic</h2>
+<h2>@ViewBag.Title</h2>
+
 <form method="post">
-    <input type="text" value="@User.Identity.GetUserName()" name="UserName" />
+    <input type="hidden" value="@User.Identity.GetUserName()" name="UserName" />
     <input type="text" value="" placeholder="New topic" name="Title" />
     <button type="submit">ADD</button>
 </form>
 
+<p>@ViewBag.MessageError</p>
