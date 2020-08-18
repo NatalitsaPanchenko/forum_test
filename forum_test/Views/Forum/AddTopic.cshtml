@@ -5,7 +5,7 @@
 
 <h2>AddTopic</h2>
 <form method="post">
-    <input type="text" value="@User.Identity.GetUserId()" name="UserId" />
+    <input type="text" value="@User.Identity.GetUserName()" name="UserName" />
     <input type="text" value="" placeholder="New topic" name="Title" />
     <button type="submit">ADD</button>
 </form>
