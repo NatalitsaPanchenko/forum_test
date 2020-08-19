@@ -13,15 +13,18 @@
             @foreach (var article in ViewBag.Articles)
             {
             <li class="articles__list-item">
+                <p>author: @article.Author</p>
+                <p>created or updated at: @article.ArticleDate</p>
                 <p>@article.Content</p>
-                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id })
+                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id, userName = article.Author})
             </li>
             }
         </ul>
         }
-    </div>
+        
+</div>
     <div class="col-md-6">
-        @Html.ActionLink("AddArticle!!!", "AddArticle", new { topicID = ViewBag.Topic.Id })
+        @Html.ActionLink("AddArticle", "AddArticle", new { topicID = ViewBag.Topic.Id })
         @*<a href="/Forum/AddArticle?TopicId=@ViewBag.Topic.Id">Add article</a>*@
     </div>
 </div>

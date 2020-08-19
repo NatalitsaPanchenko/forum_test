@@ -10,6 +10,14 @@ using static forum_test.Controllers.ManageController;
 
 namespace forum_test.Controllers
 {
+    public class ArticleWithAuthor
+    {
+        public string Content { get; set; }
+        public string Author { get; set; }
+        public int Id { get; set; }
+        public DateTime ArticleDate { get; set; }
+    };
+
     [Authorize]
     public class ForumController : Controller
     {
@@ -32,8 +40,20 @@ namespace forum_test.Controllers
             {
                 return Redirect("/Forum/");
             }
+
             ViewBag.Articles = null;
-            ViewBag.Articles = db.Articles.Where(x => x.TopicId == id);
+            
+            var articles = from a in db.Articles.Where(a => a.TopicId == id)
+                          join u in db.Users on a.UserId equals u.Id
+                          select new ArticleWithAuthor
+                          {
+                              Content = a.Content,
+                              Author = u.UserName,
+                              Id = a.Id,
+                              ArticleDate = a.UpdatedAt
+                          };
+            
+            ViewBag.Articles = articles;
 
             return View();
         }
@@ -47,7 +67,7 @@ namespace forum_test.Controllers
         [HttpPost]
         public ActionResult AddTopic(string UserName, string Title)
         {
-            ApplicationUser user = db.Users.First(x => x.UserName == UserName);
+            ApplicationUser user = db.Users.FirstOrDefault(x => x.UserName == UserName);
             
             if (user == null)
             {
@@ -109,19 +129,27 @@ namespace forum_test.Controllers
             db.Articles.Add(article);
             db.SaveChanges();
 
-            return RedirectToAction("Article", new { articleID = article.Id, topicID = topicId });
+            return RedirectToAction("Topic", new { id = topicId });
         }
 
-        public ActionResult Article(int? articleID, int? topicID)
+        /*public ActionResult Article(int? articleID, int? topicID)
         {
             ViewBag.article = db.Articles.FirstOrDefault(x => x.Id == articleID);
             ViewBag.topic = db.Topics.FirstOrDefault(x => x.Id == topicID);
             return View();
-        }
+        }*/
+        [HttpGet]
         public ActionResult EditArticle(int? topicID, int? articleID)
         {
             ViewBag.article = db.Articles.FirstOrDefault(el => el.Id == articleID);
             return View();
         }
+
+        /*[HttpPost]
+        public ActionResult EditArticle(int? topicID, int? articleID)
+        {
+            ViewBag.article = db.Articles.FirstOrDefault(el => el.Id == articleID);
+            return View();
+        }*/
     }
 }
