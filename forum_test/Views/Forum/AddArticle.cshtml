@@ -1,7 +1,14 @@
-﻿
+﻿@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "AddArticle";
 }
 
-<h2>AddArticle</h2>
+<h2>@ViewBag.Topic.Title</h2>
+<h3>Add Article</h3>
+<form method="post" class="add_article_form">
+    <input type="hidden" value="@User.Identity.GetUserName()" name="UserName" />
+    <input type="hidden" value="@ViewBag.Topic.Id" name="TopicId" />
+    <input type="text" value="" placeholder="New article" name="Content" />
+    <button type="submit">ADD</button>
+</form>
 

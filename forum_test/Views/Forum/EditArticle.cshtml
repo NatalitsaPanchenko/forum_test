@@ -4,4 +4,11 @@
 }
 
 <h2>EditArticle</h2>
+@*@if (ViewBag.article != null)
+{
+<p>Author: @ViewBag.article.UserId</p
+<p>@ViewBag.article.Content</p>
+<a href="/Forum/EditArticle/@ViewBag.article.Id">Edit</a>
+<a href="/Forum/Article/@ViewBag.article.Id">Back</a>
+}*@
 

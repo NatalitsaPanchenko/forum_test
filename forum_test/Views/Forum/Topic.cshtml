@@ -1,0 +1,28 @@
+﻿@model IEnumerable<forum_test.Models.Article>
+
+@{
+    ViewBag.Title = "Topic";
+}
+
+<h2>@ViewBag.Topic.Title</h2>
+
+<div class="jumbotron row articles">
+    <div class="col-md-6">
+        @if (ViewBag.Articles != null) {
+        <ul class="articles__list">
+            @foreach (var article in ViewBag.Articles)
+            {
+            <li class="articles__list-item">
+                <p>@article.Content</p>
+                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id })
+            </li>
+            }
+        </ul>
+        }
+    </div>
+    <div class="col-md-6">
+        @Html.ActionLink("AddArticle!!!", "AddArticle", new { topicID = ViewBag.Topic.Id })
+        @*<a href="/Forum/AddArticle?TopicId=@ViewBag.Topic.Id">Add article</a>*@
+    </div>
+</div>
+

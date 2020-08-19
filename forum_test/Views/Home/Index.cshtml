@@ -7,11 +7,11 @@
         <ul class="topics__list">
             @foreach (var topic in ViewBag.Topics)
             {
-                <li class="topics__list-item">
-                    <a href="#" class="topics__list-link">
-                        @topic.Title
-                    </a>
-                </li>
+            <li class="topics__list-item">
+                <a href="/Forum/Topic/@topic.Id" class="topics__list-link">
+                    @topic.Title
+                </a>
+            </li>
             }
         </ul>
     </div>

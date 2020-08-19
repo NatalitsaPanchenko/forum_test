@@ -25,6 +25,19 @@ namespace forum_test.Controllers
             return Redirect("/"); ;
         }
 
+        public ActionResult Topic(int? id)
+        {
+            ViewBag.Topic = db.Topics.FirstOrDefault(x => x.Id == id);
+            if (ViewBag.Topic == null)
+            {
+                return Redirect("/Forum/");
+            }
+            ViewBag.Articles = null;
+            ViewBag.Articles = db.Articles.Where(x => x.TopicId == id);
+
+            return View();
+        }
+
         [HttpGet]
         public ActionResult AddTopic()
         {
@@ -59,13 +72,55 @@ namespace forum_test.Controllers
 
             return RedirectToAction("Index");
         }
-        public ActionResult AddArticle()
+
+        [HttpGet]
+        public ActionResult AddArticle(int topicID)
         {
+            ViewBag.Topic = db.Topics.FirstOrDefault(x => x.Id == topicID);
             return View();
         }
 
-        public ActionResult EditArticle()
+        [HttpPost]
+        public ActionResult AddArticle(string UserName, string Content, int topicId)
         {
+            ApplicationUser user = db.Users.First(x => x.UserName == UserName);
+
+            if (user == null)
+            {
+                return Redirect("/Login/");
+            }
+
+            Topic topic = db.Topics.FirstOrDefault(x => x.Id == topicId);
+
+            if (topic == null)
+            {
+                return Redirect("/Forum/");
+            }
+
+            Article article = new Article 
+            {
+                Content = Content,
+                TopicId = topicId,
+                UserId = user.Id,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
+
+            db.Articles.Add(article);
+            db.SaveChanges();
+
+            return RedirectToAction("Article", new { articleID = article.Id, topicID = topicId });
+        }
+
+        public ActionResult Article(int? articleID, int? topicID)
+        {
+            ViewBag.article = db.Articles.FirstOrDefault(x => x.Id == articleID);
+            ViewBag.topic = db.Topics.FirstOrDefault(x => x.Id == topicID);
+            return View();
+        }
+        public ActionResult EditArticle(int? topicID, int? articleID)
+        {
+            ViewBag.article = db.Articles.FirstOrDefault(el => el.Id == articleID);
             return View();
         }
     }
