@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<forum_test.Models.Article>
-
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Topic";
 }
@@ -16,7 +16,7 @@
                 <p>author: @article.Author</p>
                 <p>created or updated at: @article.ArticleDate</p>
                 <p>@article.Content</p>
-                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id, userName = article.Author})
+                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id, userName = User.Identity.GetUserName()})
             </li>
             }
         </ul>

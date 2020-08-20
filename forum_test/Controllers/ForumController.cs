@@ -21,8 +21,8 @@ namespace forum_test.Controllers
     [Authorize]
     public class ForumController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
-
+        readonly ApplicationDbContext db = new ApplicationDbContext();
+       
         // GET: Forum
         public ForumController()
         {
@@ -132,24 +132,42 @@ namespace forum_test.Controllers
             return RedirectToAction("Topic", new { id = topicId });
         }
 
-        /*public ActionResult Article(int? articleID, int? topicID)
-        {
-            ViewBag.article = db.Articles.FirstOrDefault(x => x.Id == articleID);
-            ViewBag.topic = db.Topics.FirstOrDefault(x => x.Id == topicID);
-            return View();
-        }*/
         [HttpGet]
-        public ActionResult EditArticle(int? topicID, int? articleID)
+        public ActionResult EditArticle(int topicID, int articleID, string userName)
         {
-            ViewBag.article = db.Articles.FirstOrDefault(el => el.Id == articleID);
+            Article article = db.Articles.FirstOrDefault(el => el.Id == articleID);
+            Topic topic = db.Topics.FirstOrDefault(el => el.Id == topicID);
+
+            if (article == null || topic == null)
+            {
+                return RedirectToAction("Topic", new { id = topicID });
+            }
+            ViewBag.topic = topic;
+
+            ApplicationUser user = db.Users.Find(article.UserId);
+
+            if ( userName == user.UserName)
+            {
+                ViewBag.article = article;
+            }
+            else
+            {
+                ViewBag.editArticleError = "Only the author can edit the article!";
+            }
+            
             return View();
         }
 
-        /*[HttpPost]
-        public ActionResult EditArticle(int? topicID, int? articleID)
+        [HttpPost]
+        public ActionResult EditArticle(int? articleID, string Content)
         {
-            ViewBag.article = db.Articles.FirstOrDefault(el => el.Id == articleID);
-            return View();
-        }*/
+            Article article = db.Articles.FirstOrDefault(el => el.Id == articleID);
+            article.Content = Content;
+            article.UpdatedAt = DateTime.Now;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Topic", new { id = article.TopicId});
+        }
     }
 }

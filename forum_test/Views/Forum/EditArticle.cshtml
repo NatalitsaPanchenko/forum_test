@@ -4,11 +4,17 @@
 }
 
 <h2>EditArticle</h2>
-@*@if (ViewBag.article != null)
+@if (ViewBag.article != null)
 {
-<p>Author: @ViewBag.article.UserId</p
-<p>@ViewBag.article.Content</p>
-<a href="/Forum/EditArticle/@ViewBag.article.Id">Edit</a>
-<a href="/Forum/Article/@ViewBag.article.Id">Back</a>
-}*@
+    <form method="post">
+        <input type="text" value="@ViewBag.article.Content" name="Content" />
+        <button type="submit">Edit</button>
+        <a href="/Forum/Topic/@ViewBag.topic.Id">Back</a>
+    </form>
+}
+@if (ViewBag.editArticleError != null)
+{
+    <p>@ViewBag.editArticleError</p>
+    <a href="/Forum/Topic/@ViewBag.topic.Id">Back</a>
+}
 

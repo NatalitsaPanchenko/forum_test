@@ -254,7 +254,6 @@
     <Content Include="Views\Forum\AddArticle.cshtml" />
     <Content Include="Views\Forum\EditArticle.cshtml" />
     <Content Include="Views\Forum\Topic.cshtml" />
-    <Content Include="Views\Forum\Article.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
