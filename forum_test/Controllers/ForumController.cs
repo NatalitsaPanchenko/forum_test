@@ -23,7 +23,6 @@ namespace forum_test.Controllers
     {
         readonly ApplicationDbContext db = new ApplicationDbContext();
        
-        // GET: Forum
         public ForumController()
         {
         }
@@ -38,7 +37,7 @@ namespace forum_test.Controllers
             ViewBag.Topic = db.Topics.FirstOrDefault(x => x.Id == id);
             if (ViewBag.Topic == null)
             {
-                return Redirect("/Forum/");
+                return Redirect("/Forum");
             }
 
             ViewBag.Articles = null;
@@ -71,7 +70,7 @@ namespace forum_test.Controllers
             
             if (user == null)
             {
-                return Redirect("/Login/");
+                return Redirect("/Login");
             }
 
             Topic newTopic = db.Topics.FirstOrDefault(x => x.Title == Title);
@@ -94,8 +93,13 @@ namespace forum_test.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddArticle(int topicID)
+        public ActionResult AddArticle(int? topicID)
         {
+            if (topicID == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             ViewBag.Topic = db.Topics.FirstOrDefault(x => x.Id == topicID);
             return View();
         }
@@ -103,6 +107,11 @@ namespace forum_test.Controllers
         [HttpPost]
         public ActionResult AddArticle(string UserName, string Content, int topicId)
         {
+            if (Content == "")
+            {
+                return RedirectToAction("AddArticle", new { topicID = topicId});
+            }
+
             ApplicationUser user = db.Users.First(x => x.UserName == UserName);
 
             if (user == null)
@@ -114,7 +123,7 @@ namespace forum_test.Controllers
 
             if (topic == null)
             {
-                return Redirect("/Forum/");
+                return Redirect("Forum");
             }
 
             Article article = new Article 
