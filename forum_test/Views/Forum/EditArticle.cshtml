@@ -1,15 +1,18 @@
 ﻿
 @{
-    ViewBag.Title = "EditArticle";
+    ViewBag.Title = "Edit The Article";
 }
 
 <h2>EditArticle</h2>
 @if (ViewBag.article != null)
 {
+    <p><small class="text-muted">last update at: @ViewBag.article.UpdatedAt</small></p>
     <form method="post">
-        <input type="text" value="@ViewBag.article.Content" name="Content" />
-        <button type="submit">Edit</button>
-        <a href="/Forum/Topic/@ViewBag.topic.Id">Back</a>
+        <div class="form-group">
+            <textarea class="form-control" rows="5" cols="50" maxlength="500"  name="Content">@ViewBag.article.Content</textarea>
+            <button class="btn btn-primary" type="submit">Edit</button>
+            <a href="/Forum/Topic/@ViewBag.topic.Id">Back</a>
+        </div>
     </form>
 }
 @if (ViewBag.editArticleError != null)
@@ -17,4 +20,3 @@
     <p>@ViewBag.editArticleError</p>
     <a href="/Forum/Topic/@ViewBag.topic.Id">Back</a>
 }
-

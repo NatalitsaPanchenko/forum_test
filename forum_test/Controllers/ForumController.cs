@@ -133,12 +133,12 @@ namespace forum_test.Controllers
         }
 
         [HttpGet]
-        public ActionResult EditArticle(int topicID, int articleID, string userName)
+        public ActionResult EditArticle(int? topicID, int? articleID, string userName)
         {
             Article article = db.Articles.FirstOrDefault(el => el.Id == articleID);
             Topic topic = db.Topics.FirstOrDefault(el => el.Id == topicID);
 
-            if (article == null || topic == null)
+            if (article == null || topic == null || topicID == null)
             {
                 return RedirectToAction("Topic", new { id = topicID });
             }

@@ -8,7 +8,7 @@
 <form method="post" class="add_article_form">
     <input type="hidden" value="@User.Identity.GetUserName()" name="UserName" />
     <input type="hidden" value="@ViewBag.Topic.Id" name="TopicId" />
-    <input type="text" value="" placeholder="New article" name="Content" />
+    <textarea class="form-control" rows="10" type="text" value="" placeholder="New article" name="Content" />
     <button type="submit">ADD</button>
 </form>
 

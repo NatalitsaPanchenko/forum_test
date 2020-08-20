@@ -6,26 +6,35 @@
 
 <h2>@ViewBag.Topic.Title</h2>
 
-<div class="jumbotron row articles">
-    <div class="col-md-6">
-        @if (ViewBag.Articles != null) {
-        <ul class="articles__list">
-            @foreach (var article in ViewBag.Articles)
-            {
-            <li class="articles__list-item">
-                <p>author: @article.Author</p>
-                <p>created or updated at: @article.ArticleDate</p>
-                <p>@article.Content</p>
-                @Html.ActionLink("Edit", "EditArticle", new { topicID = ViewBag.Topic.Id, articleID = article.Id, userName = User.Identity.GetUserName()})
-            </li>
-            }
-        </ul>
+<div class="row articles">
+    @if (ViewBag.Articles != null) {
+    <div class="articles__list col-md-12">
+        @foreach (var article in ViewBag.Articles)
+        {
+        <div class="panel panel-default articles__list-item row">
+            <div class="panel-body panel-article-flex col-xs-12">
+                <div class="panel-article-flex-item col-xs-12 col-sm-9">
+                    <p><small class="text-muted">author: @article.Author</small></p>
+                    <p>@article.Content</p>
+                </div>
+                <div class="panel-article-flex-item col-xs-12 col-sm-3">
+                    <p><small class="text-muted">last update at: @article.ArticleDate</small></p>
+                    @Html.ActionLink("Edit",
+                                     "EditArticle",
+                                      new { topicID = ViewBag.Topic.Id, articleID = article.Id, userName = User.Identity.GetUserName() },
+                                      new { @class = "btn btn-light" })
+                </div>
+            </div>
+         </div>
         }
-        
-</div>
-    <div class="col-md-6">
-        @Html.ActionLink("AddArticle", "AddArticle", new { topicID = ViewBag.Topic.Id })
-        @*<a href="/Forum/AddArticle?TopicId=@ViewBag.Topic.Id">Add article</a>*@
     </div>
+    }
+<div class="col-md-12">
+    @Html.ActionLink("Add new article",
+                     "AddArticle",
+                     new { topicID = ViewBag.Topic.Id },
+                     new { @class = "btn btn-primary" })
 </div>
+</div>
+
 
